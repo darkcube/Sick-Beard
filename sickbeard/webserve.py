@@ -1763,7 +1763,30 @@ class Home:
 
         redirect("/home/displayShow?show=" + str(epObj.show.tvdbid))
 
+encoder = json.JSONEncoder()
 
+def jsonify_tool_callback(*args, **kwargs):
+    response = cherrypy.response
+    response.headers['Content-Type'] = 'application/json'
+    response.body = encoder.iterencode(response.body)
+
+cherrypy.tools.jsonify = cherrypy.Tool('before_finalize', jsonify_tool_callback, priority=30)
+
+class WebAPI:
+    
+    @cherrypy.tools.jsonify()
+    @cherrypy.expose
+    def showlist(self):
+        myDB = db.DBConnection()
+
+        sqlResults = myDB.select("SELECT show_name FROM tv_shows ORDER BY show_name")
+        shownames = []
+        
+        for curResult in sqlResults:
+            curName = curResult["show_name"]
+            shownames.append(curName)
+
+        return shownames
 
 class WebInterface:
 
@@ -1860,3 +1883,5 @@ class WebInterface:
     browser = browser.WebFileBrowser()
 
     errorlogs = ErrorLogs()
+    
+    api = WebAPI()
