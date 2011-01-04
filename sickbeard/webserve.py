@@ -1783,6 +1783,16 @@ class WebAPI:
             del showdict['lock']
             
         return shows
+    
+    def show_episodes(self, showid=None, season=None):
+        
+        if showid None:
+            return
+        
+        tvshow = tv.TVShow(showid)
+        
+        # TODO: Get list of episodes from the show and return them
+        return
 
 class WebInterface:
 
