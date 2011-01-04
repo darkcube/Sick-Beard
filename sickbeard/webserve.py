@@ -1772,6 +1772,7 @@ class WebAPI:
         
         for showdict in shows:
             del showdict['lock']
+            del showdict['episodes']
             
         return shows
     
