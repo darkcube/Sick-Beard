@@ -1777,7 +1777,7 @@ class WebAPI:
     
     def show_episodes(self, showid=None, season=None):
         
-        if showid None:
+        if not showid:
             return
         
         tvshow = tv.TVShow(showid)
