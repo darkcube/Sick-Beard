@@ -1777,16 +1777,12 @@ class WebAPI:
     @cherrypy.tools.jsonify()
     @cherrypy.expose
     def showlist(self):
-        myDB = db.DBConnection()
-
-        sqlResults = myDB.select("SELECT show_name FROM tv_shows ORDER BY show_name")
-        shownames = []
+        shows = [show.__dict__.copy() for show in sickbeard.showList]
         
-        for curResult in sqlResults:
-            curName = curResult["show_name"]
-            shownames.append(curName)
-
-        return shownames
+        for showdict in shows:
+            del showdict['lock']
+            
+        return shows
 
 class WebInterface:
 
