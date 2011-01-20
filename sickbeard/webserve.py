@@ -32,6 +32,7 @@ import cherrypy
 import cherrypy.lib
 
 import metadata.helpers
+import api
 
 from sickbeard import config
 from sickbeard import history, notifiers, processTV, search, providers
@@ -1785,38 +1786,6 @@ class Home:
 
         redirect("/home/displayShow?show=" + str(epObj.show.tvdbid))
 
-encoder = json.JSONEncoder()
-
-def jsonify_tool_callback(*args, **kwargs):
-    response = cherrypy.response
-    response.headers['Content-Type'] = 'application/json'
-    response.body = encoder.iterencode(response.body)
-
-cherrypy.tools.jsonify = cherrypy.Tool('before_finalize', jsonify_tool_callback, priority=30)
-
-class WebAPI:
-    
-    @cherrypy.tools.jsonify()
-    @cherrypy.expose
-    def showlist(self):
-        shows = [show.__dict__.copy() for show in sickbeard.showList]
-        
-        for showdict in shows:
-            del showdict['lock']
-            del showdict['episodes']
-            
-        return shows
-    
-    def show_episodes(self, showid=None, season=None):
-        
-        if not showid:
-            return
-        
-        tvshow = tv.TVShow(showid)
-        
-        # TODO: Get list of episodes from the show and return them
-        return
-
 class WebInterface:
 
     @cherrypy.expose
@@ -1963,4 +1932,4 @@ class WebInterface:
 
     errorlogs = ErrorLogs()
     
-    api = WebAPI()
+    api = api.services
